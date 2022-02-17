@@ -1,12 +1,6 @@
 import React from  'react';
-
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-    Link
-  } from 'react-router-dom';
-
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 class Form extends React.Component {
 constructor(props){
@@ -16,102 +10,112 @@ this.state={
  password: "",
  email  : "" ,
  mobile : "",
+ firstnameError : false,
+ passwordError : false,
+ emailError : false,
+ mobileError : false,
+ message : "",
 }
 this.validateform= this.validateform.bind(this);
+this.onChangeInput = this.onChangeInput.bind(this);
 }
 
 validateform() {
-    console.log('------------');
+    const firstname = this.state.firstname;
+    const password = this.state.password;
+    const email = this.state.email;
+    const mobile = this.state.mobile;
+
+   if(firstname){
+       this.setState({firstnameError: false})
+   } else {
+    this.setState({firstnameError: true})
+   }
+
+   if(password){
+    this.setState({passwordError: false})
+    } else {
+      this.setState({passwordError: true})
+   }
+
+   if(email){
+    this.setState({emailError: false})
+      } else {
+       this.setState({emailError: true})
+      }
+  if(mobile){
+    this.setState({mobileError: false})
+     } else {
+   this.setState({mobileError: true})
+   }
+
+   //Construction From Data
+   var loginFromData = {
+         firstname : firstname,
+         password  : password,
+         email     : email,
+         mobile    : mobile
+   }
+     console.log('------loginFromData--------',loginFromData);
+   //Post Data To server 
+   axios.post('http://localhost:3001/login',loginFromData )
+    .then(function (response) {
+        Swal.fire('Wow','Success!','success')
+    })
+    .catch(function (error) {
+    console.log(error);
+    });
+}
+onChangeInput(event){
+    
+    const name= event.target.name;
+    const value= event.target.value;
+    this.setState({[name]: value})
 }
     render() {
         return (
             
-                 <Router>
+              
             <div className="container register">
             <div className="row">
                 <div className="col-md-3 register-left">
                     <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
                     <h3>Welcome To </h3>
                     <h5>React App</h5>
-                    
-                    <input type="submit" name="" value="Page"/> <Link to="/page">Page</Link><br/>
+                    <h5> {this.state.message}</h5> 
+                    <input type="submit" name="" value="Page"/> <br/>
                 </div>
                 <div className="col-md-9 register-right">
                     
                     <div className="tab-content" id="myTabContent">
-                        <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" >
                             <h3 className="register-heading">Apply as a Employee</h3>
                             <div className="row register-form">
                                 <div className="col-md-6">
                                     <div className="form-group">
-                                        <input type="text" className="form-control" name="firstname" placeholder="First Name *" value="" />
+                                        <input type="text" className="form-control"  style={{border:(this.state.firstnameError) ?"1px sloid red" :""}} name="firstname" value={this.state.firstname} placeholder="First Name *"  onChange={(e)=>this.onChangeInput(e)}/>
                                     </div>
-                                    
                                     <div className="form-group">
-                                        <input type="password" className="form-control" name="password" placeholder="Password *" value="" />
+                                        <input type="password" className="form-control" style={{border:(this.state.passwordError) ?"1px sloid red" :""}} name="password" value={this.state.password}  placeholder="Password *"  onChange={(e)=>this.onChangeInput(e)} />
                                     </div>
-                                    
-                                   
                                 </div>
                                 <div className="col-md-6">
                                     <div className="form-group">
-                                        <input type="email" className="form-control" name="email" placeholder="Your Email *" value="" />
+                                        <input type="email" className="form-control"  style={{border:(this.state.emailError) ?"1px sloid red" :""}} name="email" value={this.state.email}  placeholder="Your Email *"   onChange={(e)=>this.onChangeInput(e)} />
                                     </div>
-                                   
-                                  
                                     <div className="form-group">
-                                        <input type="text" className="form-control" name="mobile" placeholder="Mobile *" value="" />
+                                        <input type="text" className="form-control"  style={{border:(this.state.mobileError) ?"1px sloid red" :""}} name="mobile" value={this.state.mobile}   placeholder="Mobile *"  onChange={(e)=>this.onChangeInput(e)} />
                                     </div>
                                     <input type="submit" className="btnRegister"  value="Register" onClick={this.validateform}/>
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                <h3  class="register-heading">Apply as a Hirer</h3>
-                                <div class="row register-form">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="First Name *" value="" />
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Last Name *" value="" />
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="email" class="form-control" placeholder="Email *" value="" />
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" maxlength="10" minlength="10" class="form-control" placeholder="Phone *" value="" />
-                                        </div>
-
-
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="password" class="form-control" placeholder="Password *" value="" />
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control" placeholder="Confirm Password *" value="" />
-                                        </div>
-                                        <div class="form-group">
-                                            <select class="form-control">
-                                                <option class="hidden"  selected disabled>Please select your Sequrity Question</option>
-                                                <option>What is your Birthdate?</option>
-                                                <option>What is Your old Phone Number</option>
-                                                <option>What is your Pet Name?</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="`Answer *" value="" />
-                                        </div>
-                                        <input type="submit" class="btnRegister"  value="Register"/>
-                                    </div>
-                                </div>
-                            </div>
+                       
                     </div>
                 </div>
             </div>
             </div>
-         </Router>
+        
         );
 
     }
