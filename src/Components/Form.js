@@ -2,6 +2,7 @@ import React from  'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
+
 class Form extends React.Component {
 constructor(props){
 super(props);
@@ -60,13 +61,13 @@ validateform() {
    //Post Data To server 
    axios.post('http://localhost:3001/login',loginFromData )
     .then(function (response) {
-        Swal.fire('Wow','Success!','success')
+        Swal.fire('Success','User added successfully!','success')
     })
     .catch(function (error) {
     console.log(error);
     });
 }
-onChangeInput(event){
+ onChangeInput(event){
     
     const name= event.target.name;
     const value= event.target.value;
@@ -83,7 +84,7 @@ onChangeInput(event){
                     <h3>Welcome To </h3>
                     <h5>React App</h5>
                     <h5> {this.state.message}</h5> 
-                    <input type="submit" name="" value="Page"/> <br/>
+                    
                 </div>
                 <div className="col-md-9 register-right">
                     
